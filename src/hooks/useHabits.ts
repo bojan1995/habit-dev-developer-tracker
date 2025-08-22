@@ -23,9 +23,12 @@ export function useHabits() {
         .select(`
           id,
           name,
+          description,
           target_frequency,
+          color,
           user_id,
-          created_at
+          created_at,
+          updated_at
         `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
@@ -101,12 +104,13 @@ export function useHabits() {
 
         return {
           ...habit,
-          description: undefined, // Explicitly set to undefined since it's not in the DB
           current_streak,
           longest_streak,
           completion_rate: Math.min(completion_rate, 100),
           total_completions,
           is_completed_today,
+          reminder_enabled: false, // Default values for missing fields
+          reminder_time: '08:00',
         };
       });
 
@@ -130,10 +134,10 @@ export function useHabits() {
         .insert([
           {
             name: habitData.name,
+            description: habitData.description || null,
             target_frequency: habitData.target_frequency,
+            color: habitData.color || '#4F46E5',
             user_id: user.id,
-            color: '#4F46E5', // Default color - you can make this dynamic
-            description: '', // Optional field
           },
         ])
         .select()
@@ -149,14 +153,21 @@ export function useHabits() {
     }
   };
 
-  const updateHabit = async (habitId: string, habitData: UpdateHabitData) => {
+  const updateHabit = async (habitId: string, habitData: UpdateHabitData | CreateHabitData) => {
     try {
+      const updateData: any = {
+        ...habitData,
+        updated_at: new Date().toISOString(),
+      };
+
+      // Handle description field properly
+      if ('description' in habitData) {
+        updateData.description = habitData.description || null;
+      }
+
       const { data, error } = await supabase
         .from('habits')
-        .update({
-          ...habitData,
-          updated_at: new Date().toISOString(),
-        })
+        .update(updateData)
         .eq('id', habitId)
         .select()
         .single();

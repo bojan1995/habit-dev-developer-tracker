@@ -59,7 +59,7 @@ export function StatsOverview() {
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
       {statCards.map((stat, index) => (
         <motion.div
           key={stat.title}
@@ -67,18 +67,18 @@ export function StatsOverview() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: index * 0.1 }}
         >
-          <Card className="hover:shadow-medium transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+          <Card className="hover:shadow-responsive-lg transition-all duration-200 h-full">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-5 lg:p-6">
+              <CardTitle className="text-responsive-sm font-medium leading-tight">
                 {stat.title}
               </CardTitle>
-              <div className={`p-2 rounded-lg ${stat.bgColor}`}>
+              <div className={`p-2 rounded-lg ${stat.bgColor} flex-shrink-0`}>
                 <stat.icon className={`h-4 w-4 ${stat.color}`} />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+            <CardContent className="p-4 sm:p-5 lg:p-6 pt-0">
+              <div className="text-responsive-2xl font-bold mb-1">{stat.value}</div>
+              <p className="text-responsive-xs text-gray-500 dark:text-gray-400 leading-relaxed">
                 {stat.description}
               </p>
             </CardContent>

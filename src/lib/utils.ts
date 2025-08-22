@@ -74,3 +74,23 @@ export function calculateStreak(completions: Date[]): number {
 
   return streak;
 }
+
+// Security: Input sanitization utilities
+export function sanitizeInput(input: string): string {
+  if (!input) return '';
+  
+  return input
+    .replace(/[<>]/g, '') // Remove potential HTML tags
+    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/on\w+=/gi, '') // Remove event handlers
+    .trim()
+    .slice(0, 1000); // Limit length
+}
+
+export function escapeHtml(text: string): string {
+  if (!text) return '';
+  
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}

@@ -28,7 +28,9 @@ export interface CreateHabitData {
 
 export interface UpdateHabitData {
   name?: string;
-  target_frequency?: string;
+  description?: string;
+  target_frequency?: 'daily' | 'weekly';
+  color?: string;
   reminder_enabled?: boolean;
   reminder_time?: string;
 }

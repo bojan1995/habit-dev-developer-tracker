@@ -69,15 +69,16 @@ export function HabitList() {
   return (
     <div className="space-y-6">
       {/* Header Controls */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div className="flex-1 flex flex-col sm:flex-row gap-3 w-full sm:max-w-md">
+      <div className="flex flex-col gap-4">
+        {/* Search and Filter Row */}
+        <div className="flex flex-col xs:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Search habits..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 h-11 sm:h-10"
             />
           </div>
           
@@ -91,14 +92,21 @@ export function HabitList() {
               { value: 'daily', label: 'Daily habits' },
               { value: 'weekly', label: 'Weekly habits' },
             ]}
-            className="sm:w-40"
+            className="xs:w-48 h-11 sm:h-10"
           />
         </div>
 
-        <Button onClick={() => setIsFormOpen(true)} className="w-full sm:w-auto">
-          <Plus className="mr-2 h-4 w-4" />
-          New Habit
-        </Button>
+        {/* Action Button Row */}
+        <div className="flex justify-end">
+          <Button 
+            onClick={() => setIsFormOpen(true)} 
+            className="w-full xs:w-auto min-h-[44px] sm:min-h-[40px]"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            <span className="hidden xs:inline">New Habit</span>
+            <span className="xs:hidden">Add Habit</span>
+          </Button>
+        </div>
       </div>
 
       {/* Habits Grid */}
@@ -106,28 +114,31 @@ export function HabitList() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center py-12"
+          className="text-center py-8 sm:py-12"
         >
-          <div className="mx-auto w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
-            <Plus className="h-8 w-8 text-gray-400" />
+          <div className="mx-auto w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+            <Plus className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+          <h3 className="text-responsive-lg font-medium text-gray-900 dark:text-white mb-2">
             {searchTerm || filterBy !== 'all' ? 'No habits found' : 'No habits yet'}
           </h3>
-          <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
+          <p className="text-responsive-sm text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto px-4">
             {searchTerm || filterBy !== 'all'
               ? 'Try adjusting your search or filter criteria'
               : 'Start building better developer habits by creating your first micro-habit'}
           </p>
           {!searchTerm && filterBy === 'all' && (
-            <Button onClick={() => setIsFormOpen(true)}>
+            <Button 
+              onClick={() => setIsFormOpen(true)}
+              className="min-h-[44px] sm:min-h-[40px]"
+            >
               <Plus className="mr-2 h-4 w-4" />
               Create Your First Habit
             </Button>
           )}
         </motion.div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
           <AnimatePresence>
             {filteredHabits.map((habit) => (
               <HabitCard
