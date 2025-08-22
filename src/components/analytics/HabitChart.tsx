@@ -20,7 +20,8 @@ export function HabitChart() {
 
   const chartData = React.useMemo(() => {
     return habits.map(habit => ({
-      name: habit.name.length > 15 ? habit.name.slice(0, 15) + '...' : habit.name,
+      name: habit.name.length > 12 ? habit.name.slice(0, 12) + '...' : habit.name,
+      fullName: habit.name,
       completion_rate: Math.round(habit.completion_rate),
       current_streak: habit.current_streak,
       total_completions: habit.total_completions,
@@ -40,10 +41,12 @@ export function HabitChart() {
 
   if (habits.length === 0) {
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <div className="analytics-grid">
         <Card>
           <CardHeader className="p-4 sm:p-5 lg:p-6">
-            <CardTitle className="text-responsive-lg">Completion Rates</CardTitle>
+            <CardTitle className="text-responsive-lg font-semibold text-gray-900 dark:text-white">
+              Completion Rates
+            </CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-5 lg:p-6 pt-0">
             <div className="flex items-center justify-center h-48 sm:h-64 text-responsive-sm text-gray-500 dark:text-gray-400">
@@ -54,7 +57,9 @@ export function HabitChart() {
         
         <Card>
           <CardHeader className="p-4 sm:p-5 lg:p-6">
-            <CardTitle className="text-responsive-lg">Habit Distribution</CardTitle>
+            <CardTitle className="text-responsive-lg font-semibold text-gray-900 dark:text-white">
+              Habit Distribution
+            </CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-5 lg:p-6 pt-0">
             <div className="flex items-center justify-center h-48 sm:h-64 text-responsive-sm text-gray-500 dark:text-gray-400">
@@ -67,7 +72,7 @@ export function HabitChart() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+    <div className="analytics-grid">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -78,34 +83,46 @@ export function HabitChart() {
             <CardTitle className="text-responsive-lg">Completion Rates (This Month)</CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-5 lg:p-6 pt-0">
-            <ResponsiveContainer width="100%" height={250} className="sm:!h-[300px]">
+            <ResponsiveContainer width="100%" height={280} className="sm:!h-[320px] lg:!h-[360px]">
               <BarChart 
                 data={chartData} 
                 margin={{ 
-                  top: 5, 
-                  right: 10, 
-                  left: 10, 
-                  bottom: 40 
+                  top: 10, 
+                  right: 15, 
+                  left: 15, 
+                  bottom: 80 
                 }}
               >
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" strokeOpacity={0.5} />
                 <XAxis 
                   dataKey="name" 
-                  tick={{ fontSize: 11 }}
+                  tick={{ fontSize: 11, fill: '#6b7280' }}
                   interval={0}
-                  angle={-45}
+                  angle={-35}
                   textAnchor="end"
-                  height={60}
+                  height={85}
+                  axisLine={{ stroke: '#d1d5db' }}
+                  tickLine={{ stroke: '#d1d5db' }}
                 />
-                <YAxis tick={{ fontSize: 11 }} />
+                <YAxis 
+                  tick={{ fontSize: 11, fill: '#6b7280' }} 
+                  axisLine={{ stroke: '#d1d5db' }}
+                  tickLine={{ stroke: '#d1d5db' }}
+                  domain={[0, 100]}
+                />
                 <Tooltip 
-                  formatter={(value, name) => [`${value}%`, 'Completion Rate']}
-                  labelFormatter={(label) => `Habit: ${label}`}
+                  formatter={(value) => [`${value}%`, 'Completion Rate']}
+                  labelFormatter={(label) => {
+                    const habit = chartData.find(h => h.name === label);
+                    return `Habit: ${habit?.fullName || label}`;
+                  }}
                   contentStyle={{
-                    backgroundColor: 'var(--tw-bg-white)',
-                    border: '1px solid var(--tw-border-gray-200)',
-                    borderRadius: '0.5rem',
-                    fontSize: '0.875rem'
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px',
+                    fontSize: '13px',
+                    padding: '10px 14px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
                   }}
                 />
                 <Bar 
@@ -129,34 +146,40 @@ export function HabitChart() {
             <CardTitle className="text-responsive-lg">Habit Distribution</CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-5 lg:p-6 pt-0">
-            <ResponsiveContainer width="100%" height={250} className="sm:!h-[300px]">
+            <ResponsiveContainer width="100%" height={280} className="sm:!h-[320px] lg:!h-[360px]">
               <PieChart>
                 <Pie
                   data={frequencyData}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, value, percent }) => 
-                    window.innerWidth >= 640 
-                      ? `${name}: ${value} (${(percent * 100).toFixed(0)}%)` 
-                      : `${name}: ${value}`
-                  }
-                  outerRadius={window.innerWidth >= 640 ? 80 : 60}
+                  label={({ name, value, percent }) => {
+                    if (value === 0) return '';
+                    const isSmallScreen = typeof window !== 'undefined' && window.innerWidth < 640;
+                    return isSmallScreen 
+                      ? `${name}: ${value}` 
+                      : `${name}: ${value} (${(percent * 100).toFixed(0)}%)`;
+                  }}
+                  outerRadius={window.innerWidth < 640 ? 65 : 85}
+                  innerRadius={0}
                   fill="#8884d8"
                   dataKey="value"
-                  style={{ fontSize: window.innerWidth >= 640 ? '12px' : '10px' }}
+                  style={{ fontSize: '12px', fontWeight: '500' }}
                 >
                   {frequencyData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+                    <Cell key={`cell-${index}`} fill={entry.color} stroke="#fff" strokeWidth={2} />
                   ))}
                 </Pie>
                 <Tooltip 
                   contentStyle={{
-                    backgroundColor: 'var(--tw-bg-white)',
-                    border: '1px solid var(--tw-border-gray-200)',
-                    borderRadius: '0.5rem',
-                    fontSize: '0.875rem'
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px',
+                    fontSize: '13px',
+                    padding: '10px 14px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
                   }}
+                  formatter={(value, name) => [`${value} habits`, name]}
                 />
               </PieChart>
             </ResponsiveContainer>
