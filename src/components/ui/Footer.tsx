@@ -1,6 +1,8 @@
 import React from 'react';
 import { Heart, Code } from 'lucide-react';
 
+const currentYear = new Date().getFullYear();
+
 export const Footer = () => {
   return (
     <footer 
@@ -19,7 +21,7 @@ export const Footer = () => {
           <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
             <div className="flex items-center gap-1">
               <Code className="h-4 w-4" aria-hidden="true" />
-              <span>Bojan &copy; {new Date().getFullYear()} HabitDev</span>
+              <span>Bojan &copy; {currentYear} HabitDev</span>
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ interface XPSystemProps {
 
 export function XPSystem({ totalXP, level, xpToNextLevel, className = '' }: XPSystemProps) {
   const currentLevelXP = totalXP % 100;
-  const progressPercent = totalXP === 0 ? 0 : (currentLevelXP / 100) * 100;
+  const progressPercent = (currentLevelXP / 100) * 100;
 
   return (
     <div className={`bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg p-4 text-white ${className}`}>

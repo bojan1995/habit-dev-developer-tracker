@@ -12,8 +12,12 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('theme');
-      if (stored === 'light' || stored === 'dark') return stored;
+      try {
+        const stored = localStorage.getItem('theme');
+        if (stored === 'light' || stored === 'dark') return stored;
+      } catch {
+        // localStorage not available
+      }
       
       return window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
@@ -31,7 +35,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       root.classList.remove('dark');
     }
     
-    localStorage.setItem('theme', theme);
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {
+      // localStorage not available
+    }
   }, [theme]);
 
   const toggleTheme = () => {

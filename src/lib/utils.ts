@@ -56,6 +56,9 @@ export function endOfDay(date: Date = new Date()) {
 }
 
 export function getDateRange(days: number) {
+  if (days < 0 || !Number.isInteger(days)) {
+    throw new Error('Days must be a positive integer');
+  }
   const end = new Date();
   const start = new Date();
   start.setDate(start.getDate() - days);

@@ -5,7 +5,7 @@ export const emailSchema = z.string().email('Please enter a valid email address'
 
 export const passwordSchema = z.string()
   .min(8, 'Password must be at least 8 characters')
-  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain at least one uppercase letter, one lowercase letter, and one number');
+  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/, 'Password must contain at least one uppercase letter, one lowercase letter, and one number');
 
 export const habitNameSchema = z.string()
   .min(1, 'Habit name is required')
