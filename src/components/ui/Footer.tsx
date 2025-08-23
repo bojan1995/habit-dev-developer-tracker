@@ -15,7 +15,7 @@ export const Footer = () => {
           <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
             <div className="flex items-center gap-1">
               <Code className="h-4 w-4" />
-              <span>&copy; {new Date().getFullYear()} HabitDev</span>
+              <span>Bojan &copy; {new Date().getFullYear()} HabitDev</span>
             </div>
           </div>
         </div>
