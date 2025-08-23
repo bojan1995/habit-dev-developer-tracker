@@ -28,8 +28,17 @@ export function HabitCard({ habit, onToggle, onEdit, onDelete, onClick }: HabitC
       className="h-full min-h-[180px]" // Reduced minimum height
     >
       <Card 
-        className="group relative h-full flex flex-col bg-card hover:shadow-lg transition-all duration-300 border border-border/50 hover:border-border"
+        className="group relative h-full flex flex-col bg-card hover:shadow-lg transition-all duration-300 border border-border/50 hover:border-border cursor-pointer"
         onClick={() => onClick?.(habit)}
+        role="button"
+        tabIndex={0}
+        aria-label={`View details for ${habit.name} habit`}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick?.(habit);
+          }
+        }}
       >
         {/* Color bar */}
         <div 
@@ -44,16 +53,17 @@ export function HabitCard({ habit, onToggle, onEdit, onDelete, onClick }: HabitC
             <Button
               variant="ghost"
               size="sm"
-              className="rounded-full p-0 -ml-1 hover:bg-background/80"
+              className="rounded-full p-2 -ml-1 hover:bg-background/80 min-h-[44px] min-w-[44px]"
               onClick={(e) => {
                 e.stopPropagation();
                 onToggle(habit.id);
               }}
+              aria-label={habit.is_completed_today ? `Mark ${habit.name} as incomplete` : `Mark ${habit.name} as complete`}
             >
               {habit.is_completed_today ? (
-                <CheckCircle2 className="h-6 w-6 text-primary" />
+                <CheckCircle2 className="h-6 w-6 text-primary" aria-hidden="true" />
               ) : (
-                <Circle className="h-6 w-6 text-muted-foreground" />
+                <Circle className="h-6 w-6 text-muted-foreground" aria-hidden="true" />
               )}
             </Button>
             <div className="flex-1">

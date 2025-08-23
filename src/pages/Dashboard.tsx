@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Header } from '@/components/layout/Header';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
-import { StatsOverview } from '@/components/analytics/StatsOverview';
-import { HabitChart } from '@/components/analytics/HabitChart';
-import { HabitList } from '@/components/habits/HabitList';
 import { Footer } from '@/components/ui/Footer';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+
+// Lazy load heavy components
+const StatsOverview = React.lazy(() => import('@/components/analytics/StatsOverview').then(m => ({ default: m.StatsOverview })));
+const HabitChart = React.lazy(() => import('@/components/analytics/HabitChart').then(m => ({ default: m.HabitChart })));
+const HabitList = React.lazy(() => import('@/components/habits/HabitList').then(m => ({ default: m.HabitList })));
 
 export function Dashboard() {
   return (
@@ -49,7 +52,9 @@ export function Dashboard() {
               animate="visible"
               transition={{ delay: 0.3 }}
             >
-              <StatsOverview />
+              <Suspense fallback={<LoadingSpinner />}>
+                <StatsOverview />
+              </Suspense>
             </motion.section>
 
             {/* Analytics Charts */}
@@ -62,7 +67,9 @@ export function Dashboard() {
               animate="visible"
               transition={{ delay: 0.4 }}
             >
-              <HabitChart />
+              <Suspense fallback={<LoadingSpinner />}>
+                <HabitChart />
+              </Suspense>
             </motion.section>
 
             {/* Habits List */}
@@ -75,7 +82,9 @@ export function Dashboard() {
               animate="visible"
               transition={{ delay: 0.5 }}
             >
-              <HabitList />
+              <Suspense fallback={<LoadingSpinner />}>
+                <HabitList />
+              </Suspense>
             </motion.section>
           </motion.div>
         </ResponsiveLayout>

@@ -53,13 +53,13 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 onClick={toggleTheme}
-                className="h-9 w-9"
+                className="h-11 w-11 min-h-[44px] min-w-[44px]"
                 aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
               >
                 {theme === 'light' ? (
-                  <Moon className="h-4 w-4" />
+                  <Moon className="h-4 w-4" aria-hidden="true" />
                 ) : (
-                  <Sun className="h-4 w-4" />
+                  <Sun className="h-4 w-4" aria-hidden="true" />
                 )}
               </Button>
 
@@ -68,10 +68,10 @@ export function Header() {
                   variant="ghost"
                   size="icon"
                   onClick={signOut}
-                  className="h-9 w-9"
+                  className="h-11 w-11 min-h-[44px] min-w-[44px]"
                   aria-label="Sign out"
                 >
-                  <LogOut className="h-4 w-4" />
+                  <LogOut className="h-4 w-4" aria-hidden="true" />
                 </Button>
               )}
             </div>
@@ -82,13 +82,13 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 onClick={toggleTheme}
-                className="h-8 w-8 sm:h-9 sm:w-9"
+                className="h-11 w-11 min-h-[44px] min-w-[44px]"
                 aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
               >
                 {theme === 'light' ? (
-                  <Moon className="h-4 w-4" />
+                  <Moon className="h-4 w-4" aria-hidden="true" />
                 ) : (
-                  <Sun className="h-4 w-4" />
+                  <Sun className="h-4 w-4" aria-hidden="true" />
                 )}
               </Button>
               
@@ -97,13 +97,14 @@ export function Header() {
                   variant="ghost"
                   size="icon"
                   onClick={toggleMobileMenu}
-                  className="h-8 w-8 sm:h-9 sm:w-9"
-                  aria-label="Open menu"
+                  className="h-11 w-11 min-h-[44px] min-w-[44px]"
+                  aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+                  aria-expanded={isMobileMenuOpen}
                 >
                   {isMobileMenuOpen ? (
-                    <X className="h-4 w-4" />
+                    <X className="h-4 w-4" aria-hidden="true" />
                   ) : (
-                    <Menu className="h-4 w-4" />
+                    <Menu className="h-4 w-4" aria-hidden="true" />
                   )}
                 </Button>
               )}

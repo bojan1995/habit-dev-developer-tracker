@@ -285,11 +285,11 @@ export function HabitList() {
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded z-10"
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-2 rounded z-10 min-h-[44px] min-w-[44px] flex items-center justify-center"
                 aria-label="Clear search"
                 title="Clear search (or press Escape)"
               >
-                <X className="h-4 w-4" />
+                <X className="h-4 w-4" aria-hidden="true" />
               </button>
             )}
           </div>
@@ -312,9 +312,9 @@ export function HabitList() {
           
           <Button 
             onClick={() => setIsFormOpen(true)} 
-            className="btn-responsive px-4 py-2 h-10 text-sm flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white whitespace-nowrap"
+            className="btn-responsive px-4 py-2 min-h-[44px] text-sm flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white whitespace-nowrap"
           >
-            <Plus className="h-4 w-4 flex-shrink-0" />
+            <Plus className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
             <span>New Habit</span>
           </Button>
         </div>
@@ -326,21 +326,21 @@ export function HabitList() {
           <span className="font-medium">Quick filters:</span>
           <button 
             onClick={() => {setFilterBy('pending'); setSearchTerm('');}}
-            className="px-3 py-1.5 bg-yellow-100 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 rounded-md hover:bg-yellow-200 dark:hover:bg-yellow-900/40 transition-colors font-medium"
+            className="px-3 py-2 min-h-[44px] bg-yellow-100 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 rounded-md hover:bg-yellow-200 dark:hover:bg-yellow-900/40 transition-colors font-medium"
             aria-label="Show pending habits"
           >
             📋 Pending ({habitCounts.pending})
           </button>
           <button 
             onClick={() => {setFilterBy('completed'); setSearchTerm('');}}
-            className="px-3 py-1.5 bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-md hover:bg-green-200 dark:hover:bg-green-900/40 transition-colors font-medium"
+            className="px-3 py-2 min-h-[44px] bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-md hover:bg-green-200 dark:hover:bg-green-900/40 transition-colors font-medium"
             aria-label="Show completed habits"
           >
             ✅ Completed ({habitCounts.completed})
           </button>
           <button 
             onClick={() => {setFilterBy('all'); setSearchTerm('');}}
-            className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-medium"
+            className="px-3 py-2 min-h-[44px] bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-medium"
             aria-label="Clear all filters"
           >
             🔄 Clear filters
