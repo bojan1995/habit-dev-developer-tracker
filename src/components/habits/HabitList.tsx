@@ -241,7 +241,7 @@ export function HabitList() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 min-h-[calc(100vh-4rem)]">
+    <div className="space-y-6">
       {/* Controls */}
       <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center mb-6">
         {/* Main Header */}

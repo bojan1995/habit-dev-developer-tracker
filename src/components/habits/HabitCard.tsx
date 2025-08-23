@@ -5,6 +5,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
+import { StreakFlame } from '@/components/gamification/StreakFlame';
 import type { HabitWithStats } from '@/types/habit';
 
 interface HabitCardProps {
@@ -66,12 +67,15 @@ export function HabitCard({ habit, onToggle, onEdit, onDelete, onClick }: HabitC
           </div>
 
           {/* Stats */}
-          <div className="flex items-center gap-2 mt-auto pt-2">
-            <Badge variant="secondary" className="text-xs">
-              {habit.target_frequency}
-            </Badge>
-            <span className="text-sm text-muted-foreground ml-auto">
-              {completionPercentage}% complete
+          <div className="flex items-center justify-between mt-auto pt-2">
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="text-xs">
+                {habit.target_frequency}
+              </Badge>
+              <StreakFlame streak={habit.current_streak} />
+            </div>
+            <span className="text-sm text-muted-foreground">
+              {completionPercentage}%
             </span>
           </div>
         </div>

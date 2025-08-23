@@ -48,7 +48,7 @@ export function AuthForm() {
         setCheckingEmail(false);
         
         if (checkError) {
-          console.warn('Email check failed, proceeding with signup:', checkError);
+          console.warn('Email check failed, proceeding with signup');
           // Continue with signup if check fails
         } else if (exists) {
           setError('This email is already registered. Please sign in instead.');
@@ -99,7 +99,7 @@ export function AuthForm() {
         setError('Account created successfully! Please check your email to verify your account.');
       }
     } catch (err) {
-      console.error('Auth error:', err);
+      console.error('Auth error occurred');
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);

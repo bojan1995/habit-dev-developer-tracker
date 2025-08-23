@@ -72,35 +72,35 @@ export function HabitChart() {
   }
 
   return (
-    <div className="analytics-grid">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Card>
-          <CardHeader className="p-4 sm:p-5 lg:p-6">
-            <CardTitle className="text-responsive-lg">Completion Rates (This Month)</CardTitle>
+        <Card className="shadow-lg">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-bold">Completion Rates</CardTitle>
           </CardHeader>
-          <CardContent className="p-4 sm:p-5 lg:p-6 pt-0">
-            <ResponsiveContainer width="100%" height={280} className="sm:!h-[320px] lg:!h-[360px]">
+          <CardContent className="pt-0">
+            <ResponsiveContainer width="100%" height={300}>
               <BarChart 
                 data={chartData} 
                 margin={{ 
-                  top: 10, 
-                  right: 15, 
-                  left: 15, 
-                  bottom: 80 
+                  top: 20, 
+                  right: 30, 
+                  left: 20, 
+                  bottom: 60 
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" strokeOpacity={0.5} />
                 <XAxis 
                   dataKey="name" 
-                  tick={{ fontSize: 11, fill: '#6b7280' }}
+                  tick={{ fontSize: 12, fill: '#6b7280' }}
                   interval={0}
-                  angle={-35}
+                  angle={-45}
                   textAnchor="end"
-                  height={85}
+                  height={60}
                   axisLine={{ stroke: '#d1d5db' }}
                   tickLine={{ stroke: '#d1d5db' }}
                 />
@@ -127,9 +127,12 @@ export function HabitChart() {
                 />
                 <Bar 
                   dataKey="completion_rate" 
-                  fill="#6366f1"
-                  radius={[4, 4, 0, 0]}
-                />
+                  radius={[6, 6, 0, 0]}
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -137,16 +140,16 @@ export function HabitChart() {
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <Card>
-          <CardHeader className="p-4 sm:p-5 lg:p-6">
-            <CardTitle className="text-responsive-lg">Habit Distribution</CardTitle>
+        <Card className="shadow-lg">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-bold">Habit Distribution</CardTitle>
           </CardHeader>
-          <CardContent className="p-4 sm:p-5 lg:p-6 pt-0">
-            <ResponsiveContainer width="100%" height={280} className="sm:!h-[320px] lg:!h-[360px]">
+          <CardContent className="pt-0">
+            <ResponsiveContainer width="100%" height={280}>
               <PieChart>
                 <Pie
                   data={frequencyData}
@@ -155,12 +158,9 @@ export function HabitChart() {
                   labelLine={false}
                   label={({ name, value, percent }) => {
                     if (value === 0) return '';
-                    const isSmallScreen = typeof window !== 'undefined' && window.innerWidth < 640;
-                    return isSmallScreen 
-                      ? `${name}: ${value}` 
-                      : `${name}: ${value} (${(percent * 100).toFixed(0)}%)`;
+                    return `${name}: ${value} (${(percent * 100).toFixed(0)}%)`;
                   }}
-                  outerRadius={window.innerWidth < 640 ? 65 : 85}
+                  outerRadius={80}
                   innerRadius={0}
                   fill="#8884d8"
                   dataKey="value"

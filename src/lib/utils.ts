@@ -6,7 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(date: Date | string) {
-  return new Date(date).toLocaleDateString('en-US', {
+  const dateObj = new Date(date);
+  if (isNaN(dateObj.getTime())) {
+    return 'Invalid Date';
+  }
+  return dateObj.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -14,7 +18,11 @@ export function formatDate(date: Date | string) {
 }
 
 export function formatDateShort(date: Date | string) {
-  return new Date(date).toLocaleDateString('en-US', {
+  const dateObj = new Date(date);
+  if (isNaN(dateObj.getTime())) {
+    return 'Invalid';
+  }
+  return dateObj.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
   });
@@ -23,6 +31,11 @@ export function formatDateShort(date: Date | string) {
 export function isToday(date: Date | string) {
   const today = new Date();
   const compareDate = new Date(date);
+  
+  if (isNaN(compareDate.getTime())) {
+    return false;
+  }
+  
   return (
     today.getFullYear() === compareDate.getFullYear() &&
     today.getMonth() === compareDate.getMonth() &&

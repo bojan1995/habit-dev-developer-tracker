@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { Target, Flame, Calendar, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { useHabits } from '@/hooks/useHabits';
+import { XPSystem, calculateXP } from '@/components/gamification/XPSystem';
+import { AchievementBadge, getAchievements } from '@/components/gamification/AchievementBadge';
 
 export function StatsOverview() {
   const { habits } = useHabits();
@@ -10,7 +12,7 @@ export function StatsOverview() {
   const stats = React.useMemo(() => {
     const totalHabits = habits.length;
     const completedToday = habits.filter(h => h.is_completed_today).length;
-    const longestStreak = Math.max(...habits.map(h => h.longest_streak), 0);
+    const longestStreak = habits.reduce((max, h) => Math.max(max, h.longest_streak), 0);
     const averageCompletion = totalHabits > 0 
       ? Math.round(habits.reduce((acc, h) => acc + h.completion_rate, 0) / totalHabits)
       : 0;
@@ -58,8 +60,32 @@ export function StatsOverview() {
     },
   ];
 
+  const xpData = calculateXP(habits);
+  const achievements = getAchievements(habits);
+
   return (
-    <div className="stats-grid">
+    <div className="space-y-6">
+      {/* XP and Achievements */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <XPSystem {...xpData} />
+        <Card className="p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold">Achievements</h3>
+            <AchievementBadge achievements={achievements} />
+          </div>
+          <div className="space-y-2">
+            {achievements.filter(a => a.unlocked).slice(0, 2).map(achievement => (
+              <div key={achievement.id} className="flex items-center gap-2 text-sm">
+                <achievement.icon className="w-4 h-4 text-yellow-500" />
+                <span>{achievement.name}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+      
+      {/* Stats Grid */}
+      <div className="stats-grid">
       {statCards.map((stat, index) => (
         <motion.div
           key={stat.title}
@@ -88,6 +114,7 @@ export function StatsOverview() {
           </Card>
         </motion.div>
       ))}
+      </div>
     </div>
   );
 }

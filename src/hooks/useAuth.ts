@@ -15,10 +15,20 @@ interface AuthMethods {
   checkEmailExists: (email: string) => Promise<{ exists: boolean; error?: AuthError }>;
 }
 
-// Rate limiting state
+// Rate limiting state with cleanup
 const authAttempts = new Map<string, { count: number; lastAttempt: number }>();
 const MAX_ATTEMPTS = 5;
 const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
+
+// Cleanup old entries periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [email, attempts] of authAttempts.entries()) {
+    if (now - attempts.lastAttempt > LOCKOUT_DURATION) {
+      authAttempts.delete(email);
+    }
+  }
+}, 5 * 60 * 1000); // Cleanup every 5 minutes
 
 function checkRateLimit(email: string): { allowed: boolean; waitTime?: number } {
   const now = Date.now();
@@ -159,54 +169,31 @@ export function useAuth(): AuthState & AuthMethods {
   };
 
   const checkEmailExists = async (email: string) => {
+    // Validate email format first
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return { exists: false, error: new Error('Invalid email format') as AuthError };
+    }
+
     try {
       // Use Supabase admin API to check if user exists
-      // This is a safe way that doesn't trigger any side effects
       const { data, error } = await supabase.rpc('check_user_exists', { 
         email_input: email 
       });
       
       if (error) {
-        // If RPC doesn't exist, fall back to sign in attempt
-        console.log('RPC not available, using fallback method');
-        return await checkEmailExistsFallback(email);
+        // If RPC doesn't exist, return false to allow signup
+        console.log('RPC not available, allowing signup');
+        return { exists: false };
       }
       
       return { exists: !!data };
     } catch (err) {
-      console.log('Error checking email, using fallback');
-      return await checkEmailExistsFallback(email);
+      console.log('Error checking email, allowing signup');
+      return { exists: false };
     }
   };
 
-  const checkEmailExistsFallback = async (email: string) => {
-    try {
-      // Try password recovery - this is safer than sign in attempts
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'http://localhost:3000/reset-password', // Dummy URL
-      });
-      
-      if (!error) {
-        // Password reset email was sent, user exists
-        return { exists: true };
-      }
-      
-      // Check the specific error message
-      if (error.message?.includes('User not found') || 
-          error.message?.includes('Invalid email') ||
-          error.message?.includes('Unable to validate email address')) {
-        // Email doesn't exist
-        return { exists: false };
-      } else {
-        // Other errors - likely means user exists but there's another issue
-        return { exists: true };
-      }
-    } catch (err) {
-      // On any error, assume email doesn't exist to allow signup
-      console.warn('Email check fallback failed:', err);
-      return { exists: false, error: err as AuthError };
-    }
-  };
+
 
   return {
     ...state,

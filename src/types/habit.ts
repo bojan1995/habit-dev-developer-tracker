@@ -43,4 +43,5 @@ export interface HabitWithStats extends Habit {
   is_completed_today: boolean;
   reminder_enabled: boolean;
   reminder_time: string;
+  completions?: HabitCompletion[];
 }
