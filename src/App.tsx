@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthForm } from '@/components/auth/AuthForm';
 import { Dashboard } from '@/pages/Dashboard';
 import { useAuth } from '@/hooks/useAuth';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 
 function AppContent() {
@@ -27,8 +29,16 @@ function AppContent() {
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <Suspense fallback={
+          <div className="min-h-dvh flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+            <LoadingSpinner size="lg" />
+          </div>
+        }>
+          <AppContent />
+        </Suspense>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }

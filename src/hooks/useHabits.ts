@@ -117,8 +117,9 @@ export function useHabits() {
       setHabits(habitsWithStats);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch habits');
-      console.error('Fetch error:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch habits';
+      setError(errorMessage);
+      console.error('Fetch habits error:', { error: err, userId: user?.id });
     } finally {
       setLoading(false);
     }

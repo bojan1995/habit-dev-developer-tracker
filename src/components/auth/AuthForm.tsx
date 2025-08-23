@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,6 +24,7 @@ export function AuthForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [checkingEmail, setCheckingEmail] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout>();
   
   const { signIn, signUp, checkEmailExists } = useAuth();
 
@@ -107,7 +108,18 @@ export function AuthForm() {
     }
   };
 
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   const toggleMode = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     setIsLogin(!isLogin);
     setError(null);
     reset();
