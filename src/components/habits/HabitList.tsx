@@ -241,85 +241,88 @@ export function HabitList() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Main Header */}
-      <div className="space-y-1">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-          Your Habits
-        </h2>
-        <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-          <span>
-            {filteredHabits.length} of {habitCounts.total} habits
-          </span>
-          {searchTerm && (
-            <span className="text-primary-600 dark:text-primary-400">
-              • matching "{searchTerm}"
+    <div className="container mx-auto px-4 py-6 min-h-[calc(100vh-4rem)]">
+      {/* Controls */}
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center mb-6">
+        {/* Main Header */}
+        <div className="flex-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+            Your Habits
+          </h2>
+          <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <span>
+              {filteredHabits.length} of {habitCounts.total} habits
             </span>
-          )}
-          {filterBy !== 'all' && (
-            <span className="text-primary-600 dark:text-primary-400">
-              • {filterBy === 'completed' ? 'completed today' : filterBy === 'pending' ? 'pending today' : filterBy === 'daily' ? 'daily habits' : 'weekly habits'}
-            </span>
-          )}
+            {searchTerm && (
+              <span className="text-primary-600 dark:text-primary-400">
+                • matching "{searchTerm}"
+              </span>
+            )}
+            {filterBy !== 'all' && (
+              <span className="text-primary-600 dark:text-primary-400">
+                • {filterBy === 'completed' ? 'completed today' : filterBy === 'pending' ? 'pending today' : filterBy === 'daily' ? 'daily habits' : 'weekly habits'}
+              </span>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Search and Filter Controls with New Habit Button */}
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none z-10" />
-          <Input
-            placeholder="Search habits by name or description..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape' && searchTerm) {
-                setSearchTerm('');
-              }
-            }}
-            className="pl-11 pr-10 py-2 text-sm h-10 w-full border border-gray-200 dark:border-gray-700 rounded-lg focus:border-primary-500 focus:ring-1 focus:ring-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-            aria-label="Search habits"
-          />
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded z-10"
-              aria-label="Clear search"
-              title="Clear search (or press Escape)"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
+        {/* Search and Filter Controls with New Habit Button */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 flex-1">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none z-10" />
+            <Input
+              placeholder="Search habits by name or description..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape' && searchTerm) {
+                  setSearchTerm('');
+                }
+              }}
+              className="pl-11 pr-10 py-2 text-sm h-10 w-full border border-gray-200 dark:border-gray-700 rounded-lg focus:border-primary-500 focus:ring-1 focus:ring-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+              aria-label="Search habits"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded z-10"
+                aria-label="Clear search"
+                title="Clear search (or press Escape)"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          
+          <div className="sm:w-48">
+            <Select
+              value={filterBy}
+              onChange={(e) => setFilterBy(e.target.value)}
+              options={[
+                { value: 'all', label: `All habits (${habitCounts.total})` },
+                { value: 'completed', label: `Completed today (${habitCounts.completed})` },
+                { value: 'pending', label: `Pending today (${habitCounts.pending})` },
+                { value: 'daily', label: `Daily habits (${habitCounts.daily})` },
+                { value: 'weekly', label: `Weekly habits (${habitCounts.weekly})` },
+              ]}
+              className="text-sm h-10 w-full border border-gray-200 dark:border-gray-700 rounded-lg focus:border-primary-500 focus:ring-1 focus:ring-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              aria-label="Filter habits"
+            />
+          </div>
+          
+          <Button 
+            onClick={() => setIsFormOpen(true)} 
+            className="btn-responsive px-4 py-2 h-10 text-sm flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white whitespace-nowrap"
+          >
+            <Plus className="h-4 w-4 flex-shrink-0" />
+            <span>New Habit</span>
+          </Button>
         </div>
-        
-        <div className="sm:w-48">
-          <Select
-            value={filterBy}
-            onChange={(e) => setFilterBy(e.target.value)}
-            options={[
-              { value: 'all', label: `All habits (${habitCounts.total})` },
-              { value: 'completed', label: `Completed today (${habitCounts.completed})` },
-              { value: 'pending', label: `Pending today (${habitCounts.pending})` },
-              { value: 'daily', label: `Daily habits (${habitCounts.daily})` },
-              { value: 'weekly', label: `Weekly habits (${habitCounts.weekly})` },
-            ]}
-            className="text-sm h-10 w-full border border-gray-200 dark:border-gray-700 rounded-lg focus:border-primary-500 focus:ring-1 focus:ring-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-            aria-label="Filter habits"
-          />
-        </div>
-        
-        <Button 
-          onClick={() => setIsFormOpen(true)} 
-          className="btn-responsive px-4 py-2 h-10 text-sm flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white whitespace-nowrap"
-        >
-          <Plus className="h-4 w-4 flex-shrink-0" />
-          <span>New Habit</span>
-        </Button>
       </div>
 
       {/* Quick Actions Bar */}
       {habitCounts.total > 0 && (
-        <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+        <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-6">
           <span className="font-medium">Quick filters:</span>
           <button 
             onClick={() => {setFilterBy('pending'); setSearchTerm('');}}
@@ -345,107 +348,31 @@ export function HabitList() {
         </div>
       )}
 
-      {/* Habits Grid - Centered with 800px width */}
-      {filteredHabits.length === 0 ? (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center py-8 sm:py-12"
-        >
-          <div className="mx-auto w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-6">
-            {searchTerm || filterBy !== 'all' ? (
-              <Search className="h-8 w-8 sm:h-10 sm:w-10 text-gray-400" />
-            ) : (
-              <Plus className="h-8 w-8 sm:h-10 sm:w-10 text-gray-400" />
-            )}
-          </div>
-          
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-3">
-            {searchTerm || filterBy !== 'all' ? 'No habits found' : 'Start your journey!'}
-          </h3>
-          
-          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-lg mx-auto leading-relaxed">
-            {searchTerm || filterBy !== 'all'
-              ? 'Try adjusting your search or filter criteria to find the habits you\'re looking for.'
-              : 'Build better developer habits one small step at a time. Small consistent actions lead to extraordinary results.'}
+      {/* Updated grid with larger gaps and fewer columns */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
+        {filteredHabits.map((habit) => (
+          <HabitCard
+            key={habit.id}
+            habit={habit}
+            onToggle={toggleHabitCompletion}
+            onEdit={handleEdit}
+            onDelete={handleDeleteClick}
+            onClick={handleCardClick}
+          />
+        ))}
+      </div>
+
+      {/* Empty state */}
+      {filteredHabits.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <p className="text-lg text-muted-foreground mb-4">
+            {searchTerm ? 
+              `No habits found matching "${searchTerm}"` : 
+              "No habits yet. Start by creating your first habit!"}
           </p>
-          
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            {searchTerm || filterBy !== 'all' ? (
-              <>
-                <Button 
-                  onClick={() => {setSearchTerm(''); setFilterBy('all');}}
-                  variant="outline"
-                  className="btn-responsive px-4 py-2 h-10 text-sm flex items-center gap-2"
-                >
-                  🔄 Clear filters
-                </Button>
-                {habitCounts.total === 0 && (
-                  <Button 
-                    onClick={() => setIsFormOpen(true)}
-                    className="btn-responsive px-6 py-2 h-10 text-sm flex items-center gap-2"
-                  >
-                    <Plus className="h-4 w-4 flex-shrink-0" />
-                    <span className="whitespace-nowrap">Create Your First Habit</span>
-                  </Button>
-                )}
-              </>
-            ) : (
-              <>
-                <Button 
-                  onClick={() => setIsFormOpen(true)}
-                  className="btn-responsive px-6 py-2 h-10 text-sm flex items-center gap-2"
-                >
-                  <Plus className="h-4 w-4 flex-shrink-0" />
-                  <span className="whitespace-nowrap">Create Your First Habit</span>
-                </Button>
-                
-                {/* Helpful Tips */}
-                <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 max-w-md">
-                  <h4 className="text-sm font-medium text-blue-900 dark:text-blue-200 mb-2">
-                    💡 Pro Tips for Success:
-                  </h4>
-                  <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1 text-left">
-                    <li>• Start with just 1-2 simple habits</li>
-                    <li>• Make them so easy you can't say no</li>
-                    <li>• Be consistent, not perfect</li>
-                    <li>• Track daily for best results</li>
-                  </ul>
-                </div>
-              </>
-            )}
-          </div>
-        </motion.div>
-      ) : (
-        <div className="flex justify-center">
-          <div className="w-full max-w-[800px] px-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              <AnimatePresence mode="popLayout">
-                {filteredHabits.map((habit, index) => (
-                  <motion.div
-                    key={habit.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2, delay: index * 0.05 }}
-                    layout
-                  >
-                    <HabitCard
-                      habit={habit}
-                      onToggle={toggleHabitCompletion}
-                      onEdit={handleEdit}
-                      onDelete={(habitId) => {
-                        const habit = filteredHabits.find(h => h.id === habitId);
-                        if (habit) handleDeleteClick(habit);
-                      }}
-                      onClick={handleCardClick}
-                    />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          </div>
+          <Button onClick={() => setIsFormOpen(true)}>
+            Create New Habit
+          </Button>
         </div>
       )}
 

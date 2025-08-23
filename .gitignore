@@ -7,30 +7,35 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 
 # Environment files
-.env*
-!.env.example
+.env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
-# Supabase
-/supabase/.temp
+# testing
+/coverage
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# production
+/build
+/dist
+
+# misc
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+*.pem
+.idea/
+.vscode/
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
 
