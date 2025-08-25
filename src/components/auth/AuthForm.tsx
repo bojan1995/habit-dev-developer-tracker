@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { useAuth } from '@/hooks/useAuth';
 
+// Validation schema
 const authSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string()
@@ -23,6 +24,7 @@ export function AuthForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [checkingEmail, setCheckingEmail] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout>();
   
@@ -40,39 +42,43 @@ export function AuthForm() {
   const onSubmit = async (data: AuthFormData) => {
     setIsLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       // For signup, check if email exists first
       if (!isLogin) {
-        setCheckingEmail(true);
-        const { exists, error: checkError } = await checkEmailExists(data.email);
-        setCheckingEmail(false);
-        
-        if (checkError) {
-          console.warn('Email check failed, proceeding with signup');
-          // Continue with signup if check fails
-        } else if (exists) {
-          setError('This email is already registered. Please sign in instead.');
-          setIsLoading(false);
-          // Auto-switch to login mode after showing the error
-          setTimeout(() => {
-            setIsLogin(true);
-            setError('Switched to sign in mode. Enter your password to continue.');
-          }, 3000);
-          return;
+        try {
+          setCheckingEmail(true);
+          const emailCheck = await checkEmailExists(data.email);
+          setCheckingEmail(false);
+          
+          if (emailCheck?.error) {
+            console.warn('Email check failed, proceeding with signup:', emailCheck.error);
+          } else if (emailCheck?.exists) {
+            setError('This email is already registered. Please sign in instead.');
+            setIsLoading(false);
+            setTimeout(() => {
+              setIsLogin(true);
+              setError('Switched to sign in mode. Enter your password to continue.');
+            }, 3000);
+            return;
+          }
+        } catch (checkErr) {
+          console.warn('Email check failed, proceeding with signup:', checkErr);
+          setCheckingEmail(false);
         }
       }
 
-      const { error } = isLogin
+      const result = isLogin
         ? await signIn(data.email, data.password)
         : await signUp(data.email, data.password);
 
-      if (error) {
+      if (result?.error) {
+        const { error } = result;
         // Handle specific error types with better messaging
         if (error.status === 429) {
           setError(error.message);
-        } else if (error.status === 409 || 
-                   error.message?.includes('User already registered') || 
+        } else if (error.message?.includes('User already registered') || 
                    error.message?.includes('already been registered') ||
                    error.message?.includes('Email address is already registered') ||
                    error.message?.includes('already registered')) {
@@ -96,11 +102,17 @@ export function AuthForm() {
           // Generic error handling
           setError(error.message || 'An error occurred. Please try again.');
         }
-      } else if (!isLogin) {
-        setError('Account created successfully! Please check your email to verify your account.');
+      } else {
+        // Success case
+        if (!isLogin) {
+          setSuccess('Account created successfully! Please check your email to verify your account.');
+        } else {
+          // Handle successful login - you might want to redirect here
+          console.log('Login successful');
+        }
       }
     } catch (err) {
-      console.error('Auth error occurred');
+      console.error('Auth error occurred:', err);
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
@@ -119,9 +131,11 @@ export function AuthForm() {
   const toggleMode = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
     setIsLogin(!isLogin);
     setError(null);
+    setSuccess(null);
     reset();
   };
 
@@ -210,20 +224,22 @@ export function AuthForm() {
                 )}
               </div>
 
-              {error && (
+              {(error || success) && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className={`p-3 rounded-lg text-sm ${
-                    error.includes('successfully') || error.includes('Switched to sign in')
-                      ? 'bg-secondary-50 text-secondary-700 border border-secondary-200'
-                      : error.includes('already exists')
+                    success
+                      ? 'bg-green-50 text-green-700 border border-green-200'
+                      : error?.includes('Switched to sign in')
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                      : error?.includes('already exists') || error?.includes('already registered')
                       ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
                       : 'bg-red-50 text-red-700 border border-red-200'
                   }`}
                 >
-                  {error}
-                  {error.includes('already exists') && (
+                  {success || error}
+                  {error?.includes('already exists') && (
                     <div className="mt-2 text-xs">
                       💡 Tip: If you forgot your password, you can reset it after switching to sign in mode.
                     </div>
