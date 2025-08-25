@@ -1,6 +1,8 @@
 # HabitDev - Developer Micro Habit Tracker
 
 A beautiful, production-ready SaaS application for tracking developer micro-habits. Built with React, TypeScript, Tailwind CSS, and Supabase.
+<img width="1859" height="915" alt="Capture" src="https://github.com/user-attachments/assets/354c006a-f8c8-4fa1-bcec-f96e88735535" />
+<img width="1441" height="828" alt="Capture1" src="https://github.com/user-attachments/assets/9b4cc6d8-6261-4328-86a4-3cdc16d07f7b" />
 
 ## ✨ Features
 
