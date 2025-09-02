@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useEmojiEffect } from '@/contexts/EmojiEffectContext';
 
 interface MoodEntry {
   date: string;
@@ -18,10 +19,17 @@ const moodLabels = ['Terrible', 'Bad', 'Okay', 'Good', 'Great'];
 
 export function MoodTracker({ onMoodSubmit, moodHistory, className = '' }: MoodTrackerProps) {
   const [selectedMood, setSelectedMood] = useState<number | null>(null);
+  const { triggerEmoji } = useEmojiEffect();
 
-  const handleMoodSelect = (mood: number) => {
+  const handleMoodSelect = (mood: number, event: React.MouseEvent) => {
     setSelectedMood(mood);
     onMoodSubmit(mood);
+    
+    // Trigger emoji effect at click position
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    triggerEmoji(moodEmojis[mood - 1], x, y);
   };
 
   const averageMood = moodHistory.length > 0 
@@ -38,17 +46,18 @@ export function MoodTracker({ onMoodSubmit, moodHistory, className = '' }: MoodT
           return (
             <motion.button
               key={moodValue}
-              className={`text-3xl p-2 rounded-full transition-all ${
+              className={`text-3xl p-3 rounded-full transition-all min-h-[44px] min-w-[44px] flex items-center justify-center ${
                 selectedMood === moodValue 
                   ? 'bg-blue-100 dark:bg-blue-900 scale-110' 
                   : 'hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => handleMoodSelect(moodValue)}
+              onClick={(e) => handleMoodSelect(moodValue, e)}
+              aria-label={`Rate mood as ${moodLabels[index]}`}
               title={moodLabels[index]}
             >
-              {emoji}
+              <span aria-hidden="true">{emoji}</span>
             </motion.button>
           );
         })}

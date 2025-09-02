@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { EmojiEffectProvider } from '@/contexts/EmojiEffectContext';
 import { AuthForm } from '@/components/auth/AuthForm';
 import { Dashboard } from '@/pages/Dashboard';
 import { useAuth } from '@/hooks/useAuth';
@@ -31,13 +32,15 @@ export default function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider>
-        <Suspense fallback={
-          <div className="min-h-dvh flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-            <LoadingSpinner size="lg" />
-          </div>
-        }>
-          <AppContent />
-        </Suspense>
+        <EmojiEffectProvider>
+          <Suspense fallback={
+            <div className="min-h-dvh flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+              <LoadingSpinner size="lg" />
+            </div>
+          }>
+            <AppContent />
+          </Suspense>
+        </EmojiEffectProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

@@ -28,8 +28,8 @@ export function Header() {
               whileHover={{ scale: 1.05 }}
               className="flex items-center space-x-2 sm:space-x-3"
             >
-              <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg bg-primary-600">
-                <Target className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+              <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg">
+                <img src="/target.svg" alt="HabitDev" className="h-6 w-6 sm:h-7 sm:w-7" />
               </div>
               <div className="hidden xs:block">
                 <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
@@ -137,8 +137,8 @@ export function Header() {
               <div className="p-4 space-y-4">
                 {/* User Info */}
                 <div className="flex items-center space-x-3 pb-3 border-b border-gray-200 dark:border-gray-700">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900">
-                    <Target className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full">
+                    <img src="/target.svg" alt="HabitDev" className="h-6 w-6" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 dark:text-white truncate">

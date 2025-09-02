@@ -9,8 +9,16 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 const StatsOverview = React.lazy(() => import('@/components/analytics/StatsOverview').then(m => ({ default: m.StatsOverview })));
 const HabitChart = React.lazy(() => import('@/components/analytics/HabitChart').then(m => ({ default: m.HabitChart })));
 const HabitList = React.lazy(() => import('@/components/habits/HabitList').then(m => ({ default: m.HabitList })));
+const MoodTracker = React.lazy(() => import('@/components/analytics/advanced/MoodTracker').then(m => ({ default: m.MoodTracker })));
 
 export function Dashboard() {
+  const [moodHistory, setMoodHistory] = React.useState([]);
+  
+  const handleMoodSubmit = (mood: number) => {
+    const today = new Date().toISOString().split('T')[0];
+    setMoodHistory(prev => [...prev, { date: today, mood, habits: [] }]);
+  };
+
   return (
     <div className="min-h-dvh bg-gray-50 dark:bg-gray-900 flex flex-col">
       <Header />
@@ -58,19 +66,35 @@ export function Dashboard() {
             </motion.section>
 
             {/* Analytics Charts */}
-            <motion.section
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 }
-              }}
-              initial="hidden"
-              animate="visible"
-              transition={{ delay: 0.4 }}
-            >
-              <Suspense fallback={<LoadingSpinner />}>
-                <HabitChart />
-              </Suspense>
-            </motion.section>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <motion.section
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.4 }}
+              >
+                <Suspense fallback={<LoadingSpinner />}>
+                  <HabitChart />
+                </Suspense>
+              </motion.section>
+              
+              <motion.section
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.45 }}
+              >
+                <Suspense fallback={<LoadingSpinner />}>
+                  <MoodTracker onMoodSubmit={handleMoodSubmit} moodHistory={moodHistory} />
+                </Suspense>
+              </motion.section>
+            </div>
 
             {/* Habits List */}
             <motion.section
