@@ -4,6 +4,13 @@ A beautiful, production-ready SaaS application for tracking developer micro-habi
 <img width="1859" height="915" alt="Capture" src="https://github.com/user-attachments/assets/354c006a-f8c8-4fa1-bcec-f96e88735535" />
 <img width="1441" height="828" alt="Capture1" src="https://github.com/user-attachments/assets/9b4cc6d8-6261-4328-86a4-3cdc16d07f7b" />
 
+PageSpeed Insights Web/Mobile 
+Web
+<img width="1905" height="913" alt="Screenshot_1" src="https://github.com/user-attachments/assets/3ee262de-7323-4725-9860-1293ddd348d8" />
+Mobile 
+<img width="1895" height="913" alt="Screenshot_2" src="https://github.com/user-attachments/assets/6f671e52-18d4-4d53-9b9b-6304a0b58b48" />
+
+
 ## ✨ Features
 
 - **User Authentication**: Secure email/password authentication with Supabase Auth
